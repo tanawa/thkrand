@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<title></title>
 	<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
 
 	<style type="text/css">
 		@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
@@ -51,18 +51,32 @@
 		<option>มัธยมศึกษาชั้นปีที่ 5</option>
 		<option>มัธยมศึกษาชั้นปีที่ 6</option>
 	</select>
-	<button style="background-color: #F67280;" onclick="sendRemote('สุ่มสิบคน')">
-		สุ่มสิบคน
-	</button>
+	<select id="chooserand">
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+		<option>5</option>
+		<option>6</option>
+		<option>7</option>
+		<option>8</option>
+		<option>9</option>
+		<option>10</option>
+	</select>
 </div>
 <div>
 	<button style="background-color: #C06C84;" onclick="sendRemote('สุ่ม')">
-		สุ่มแบบคนเดียว
+		สุ่ม
 	</button>
 </div>
 <div>
 	<button style="background-color: #6C5B7B;" onclick="sendRemote('ภาพ1')">
 		ภาพ 1
+	</button>
+</div>
+<div>
+	<button style="background-color: ##F67280;" onclick="sendRemote('รีเซต')">
+		รีเซต
 	</button>
 </div>
 <script>
@@ -80,8 +94,8 @@
   function sendRemote(commard){
   	if(commard=="สุ่ม" || commard=="สุ่มสิบคน"){
   		let number=document.getElementById("choose").value;
-  		console.log(number);
-  		ref.child("remote").set([commard,number])
+  		let numberrand=document.getElementById("chooserand").value;
+  		ref.child("remote").set([numberrand,number])
   	}else{
   		ref.child("remote").set(commard);
   	}
