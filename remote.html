@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
+		body{
+			padding:0;
+			margin:0;
+			font-family: 'Kanit', sans-serif;
+		}
+		button{
+			height:200px;
+			width: 100%;
+			font-family: 'Kanit', sans-serif;
+			border:0px solid #ddd;
+			font-size: 15pt;
+			color:#fff;
+			opacity: 1;
+			outline:none;
+		}
+		button:active{
+			opacity: 0.8;
+		}
+		select{
+			text-align: center;
+			height:100px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<button style="background-color: #F8B195;" onclick="sendRemote('เปิดตัว')">
+		เปิดตัว
+	</button>
+</div>
+<div>
+	<select id="choose">
+		<option>ทั้งหมด</option>
+		<option>มัธยมศึกษาชั้นปีที่ 1</option>
+		<option>มัธยมศึกษาชั้นปีที่ 2</option>
+		<option>มัธยมศึกษาชั้นปีที่ 3</option>
+		<option>มัธยมศึกษาชั้นปีที่ 4</option>
+		<option>มัธยมศึกษาชั้นปีที่ 5</option>
+		<option>มัธยมศึกษาชั้นปีที่ 6</option>
+	</select>
+	<button style="background-color: #F67280;" onclick="sendRemote('สุ่มสิบคน')">
+		สุ่มสิบคน
+	</button>
+</div>
+<div>
+	<button style="background-color: #C06C84;" onclick="sendRemote('สุ่ม')">
+		สุ่มแบบคนเดียว
+	</button>
+</div>
+<div>
+	<button style="background-color: #6C5B7B;" onclick="sendRemote('ภาพ1')">
+		ภาพ 1
+	</button>
+</div>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyAS8FVZdUsHQykpoZEB-uAHRHQYSLPnatg",
+    authDomain: "testmes-2fcf4.firebaseapp.com",
+    databaseURL: "https://testmes-2fcf4.firebaseio.com",
+    projectId: "testmes-2fcf4",
+    storageBucket: "testmes-2fcf4.appspot.com",
+    messagingSenderId: "866846768783",
+    appId: "1:866846768783:web:6ef7269027340cfc"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var ref=firebase.database().ref("remote");
+  function sendRemote(commard){
+  	if(commard=="สุ่ม" || commard=="สุ่มสิบคน"){
+  		let number=document.getElementById("choose").value;
+  		console.log(number);
+  		ref.child("remote").set([commard,number])
+  	}else{
+  		ref.child("remote").set(commard);
+  	}
+  }
+
+</script>
+</body>
+</html>
