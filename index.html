@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<meta charset="utf-8">
+	<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+    <style type="text/css">
+    	@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
+    	body{
+    		overflow: hidden;
+    		margin:0;
+    		padding: 0;
+    		background-color:#f9dcd6;
+    		background-image:url('bg.png');
+    		background-repeat: no-repeat;
+    		background-attachment: fixed;
+    		font-family: 'Kanit', sans-serif;
+    	}
+    	#main{
+    		width: 100%;
+    		display: block;
+    		margin:0;
+    	}
+    	#rand{
+    		margin-top:80pt;
+    		text-align: center;
+    		font-family: 'Kanit', sans-serif;
+    		font-size: 60pt;
+    	}
+    	.im-mar{
+    		margin-left:10%;
+    	}
+    	#listname{
+    		background-color:#fff;
+    		display: block;
+    		position:relative;
+    		width: 600px;
+    		height:1000px;
+    		float:right;
+    		margin-top:40px;
+    		margin-right:40px;
+    		margin-bottom:40px;
+    		border-radius: 15px;
+    		opacity: 0.6;
+    	}
+    </style>
+</head>
+<body>
+<div id="main">
+	
+	<img src="logo.png" width="40%" class="im-mar">
+	<div id="listname">
+		
+	</div>
+	<div class="main-show">
+		<h1 id="rand">ชื่อ นามสกุล</h1>
+	</div>
+	
+</center>
+</div>
+<div id="intro">
+	intro
+</div>
+<div id="img">
+	<img src="img1.jpg" width="100%">
+</div>
+<script type="text/javascript">
+	$("#img").hide();
+  	$("#intro").hide();
+  	//$("#main").hide();
+	var firebaseConfig = {
+    apiKey: "AIzaSyAS8FVZdUsHQykpoZEB-uAHRHQYSLPnatg",
+    authDomain: "testmes-2fcf4.firebaseapp.com",
+    databaseURL: "https://testmes-2fcf4.firebaseio.com",
+    projectId: "testmes-2fcf4",
+    storageBucket: "testmes-2fcf4.appspot.com",
+    messagingSenderId: "866846768783",
+    appId: "1:866846768783:web:6ef7269027340cfc"
+  };
+  firebase.initializeApp(firebaseConfig);
+var ref=firebase.database().ref("remote/remote");
+function random(types){
+	if(types=="ทั้งหมด"){
+let a1=Math.floor(Math.random()*6);
+	let a2=Math.floor(Math.random()*22);
+	let a3=Math.floor(Math.random()*50);
+	ref=firebase.database().ref("thkrand/"+a1+"/"+a2+"/"+a3);
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null){
+			random(types);
+		}else{
+			document.getElementById("rand").innerHTML=snapshot.val();
+			console.log(a1+" "+a2+" "+a3+" :"+snapshot.val());
+		}
+	},function(err){
+		console.log("error");
+	});
+	}else{
+	types=types.replace("มัธยมศึกษาชั้นปีที่ ","");
+	console.log(types);
+    let a1=types;
+	let a2=Math.floor(Math.random()*22);
+	let a3=Math.floor(Math.random()*50);
+	ref=firebase.database().ref("thkrand/"+a1+"/"+a2+"/"+a3);
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null){
+			random(types);
+		}else{
+			document.getElementById("rand").innerHTML=snapshot.val();
+			console.log(a1+" "+a2+" "+a3+" :"+snapshot.val());
+		}
+	},function(err){
+		console.log("error");
+	});
+	}
+}
+
+
+
+  ref=firebase.database().ref("remote/remote");
+
+  ref.on("value",function(snapshot){
+  	if(snapshot.val()!=null){
+  		let ans=snapshot.val();
+  		if(ans=="เปิดตัว"){
+  			$("#intro").show();
+  			$("#img").hide();
+  			$("#main").hide();
+  			ref.remove();
+  		}else if(ans=="ภาพ1"){
+  			$("#img").show();
+  			$("#intro").hide();
+  			$("#main").hide();
+  			ref.remove();
+  		}else{
+  			if(ans.length==2){
+  				$("#main").show();
+  				$("#intro").hide();
+  				$("#img").hide();
+  				console.log(ans[0]);
+  				console.log(ans[1]);
+  				for(let y=0;y<ans[0];y++){
+  					random(ans[1]);
+
+  				}
+  				ref.remove();
+  			}
+  		}
+  		ref.remove();
+  	}
+  },function(err){
+  	console.log("error");
+  });
+</script>
+</body>
+</html>
