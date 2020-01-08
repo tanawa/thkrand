@@ -92,6 +92,7 @@
   firebase.initializeApp(firebaseConfig);
   var ref=firebase.database().ref("remote");
   function sendRemote(commard){
+  	ref.child("remote").remove();
   	if(commard=="สุ่ม" || commard=="สุ่มสิบคน"){
   		let number=document.getElementById("choose").value;
   		let numberrand=document.getElementById("chooserand").value;
