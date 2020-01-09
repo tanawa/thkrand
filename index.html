@@ -15,6 +15,11 @@
         50%{transform: scale(1.1,1.1);}
         100%{transform: scale(1,1);}
       }
+      @keyframes startani{
+        0%{transform: rotate(1deg);}
+        50%{transform: rotate(4deg);}
+        100%{transform: rotate(1deg);}
+      }
       body{
     		overflow: hidden;
     		margin:0;
@@ -23,7 +28,7 @@
     		font-family: 'Kanit', sans-serif;
     	}
     	#main{
-        height:640px;
+        height:790px;
     		width: 100%;
     		display: block;
     		margin:0;
@@ -31,14 +36,17 @@
         background-size: cover;
     	}
     	#rand{
-    		margin-top:20px;
+    		margin-top:320px;
     		text-align: center;
     		font-family: 'Kanit', sans-serif;
-    		font-size: 60pt;
+    		font-size: 40pt;
     	}
       #load{
-        margin-top:10px;
+        margin-top:320px;
         margin-left:30%;
+      }
+      #img{
+        
       }
     	.im-mar{
     		margin-left:10%;
@@ -48,8 +56,8 @@
     		background-color:#fff;
     		display: block;
     		position:relative;
-    		width: 600px;
-    		height:550px;
+    		width: 300px;
+    		height:620px;
     		float:right;
     		margin-top:40px;
     		margin-right:40px;
@@ -64,28 +72,39 @@
         animation-duration: 0.5s;
         animation-name: popup;
       }
+      
+      #logoStart{
+        position:absolute;
+        animation-name:startani;
+        animation-duration: 1s;
+        animation-iteration-count:infinite;
+
+      }
+      
     </style>
 </head>
 <body>
 
 
 <div id="main">
-	
-	<img src="logo.png" width="40%" class="im-mar">
+	<br>
+  <br>
+	<img src="logo.png" width="40%" class="im-mar" id="logoStart">
   
   <div id="listname">
     
   </div>
 
   <h1 id="rand">ชื่อ นามสกุล</h1>
-  <img src="load.gif" width="90px" id="load">
+  <img src="" width="90px" id="load">
   
 </div>
 <div id="intro">
 	intro
 </div>
 <div id="img">
-	<img src="img1.jpg" width="100%">
+  <img src="main.jpg" width="100%" height="800" style="position: absolute;">
+	<img src="img1.jpg" width="100%" height="790">
 </div>
 
 
@@ -125,10 +144,12 @@ let a1=Math.floor(Math.random()*6);
 	ref=firebase.database().ref("thkrand/"+a1+"/"+a2+"/"+a3);
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null){
-			random(types);
+			
+      random(types);
+      console.log("ซ้ำ");
 		}else{
 			document.getElementById("rand").innerHTML=snapshot.val();
-      setTimeout(myFunction(snapshot.val()), 5000);
+      setTimeout(myFunction(snapshot.val()), 200);
 		}
 	},function(err){
 		console.log("error");
@@ -143,9 +164,13 @@ let a1=Math.floor(Math.random()*6);
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null){
 			random(types);
+      console.log("ซ้ำ");
 		}else{
-			document.getElementById("rand").innerHTML=snapshot.val();
-      setTimeout(myFunction(snapshot.val()), 5000);
+			document.getElementById("rand").innerHTML="ม."+a1+"/"+a2+" เลขที่ "+a3+"<br>"+snapshot.val();
+      setTimeout(myFunction(snapshot.val()), 200);
+       $("#rand").show();
+    $("#load").hide();
+
 		}
 	},function(err){
 		console.log("error");
@@ -158,6 +183,7 @@ let a1=Math.floor(Math.random()*6);
   ref=firebase.database().ref("remote/remote");
 
   ref.on("value",function(snapshot){
+    ref=firebase.database().ref("remote/remote");
     ref.remove();
   	if(snapshot.val()!=null){
   		let ans=snapshot.val();
@@ -165,11 +191,13 @@ let a1=Math.floor(Math.random()*6);
   			$("#intro").show();
   			$("#img").hide();
   			$("#main").hide();
+        ref=firebase.database().ref("remote/remote");
   			ref.remove();
   		}else if(ans=="ภาพ1"){
   			$("#img").show();
   			$("#intro").hide();
   			$("#main").hide();
+        ref=firebase.database().ref("remote/remote");
   			ref.remove();
   		}else{
   			if(ans.length==2){
@@ -180,11 +208,14 @@ let a1=Math.floor(Math.random()*6);
   				console.log(ans[1]);
   				for(let y=0;y<ans[0];y++){
   					random(ans[1]);
+            ref=firebase.database().ref("remote/remote");
             ref.remove();
   				}
+          ref=firebase.database().ref("remote/remote");
   				ref.remove();
   			}
   		}
+      ref=firebase.database().ref("remote/remote");
   		ref.remove();
   	}
   },function(err){
