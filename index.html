@@ -25,6 +25,7 @@
     		margin:0;
     		padding: 0;
     		background-color:#f9dcd6;
+        background-image: linear-gradient(#f9dcd6, #fff);
     		font-family: 'Kanit', sans-serif;
     	}
     	#main{
@@ -80,7 +81,24 @@
         animation-iteration-count:infinite;
 
       }
-      
+      @keyframes moveon{
+        0%{transform: scale(1,1);opacity: 1;}
+        100%{transform: scale(5,5);opacity: 0.1;}
+      }
+      .moveon{
+        animation-name: moveon;
+        animation-duration: 2s;
+        position: absolute;
+      }
+      @keyframes moveup{
+        0%{opacity: 0;}
+        100%{opacity: 1;}
+      }
+      .moveup{
+        animation-name: moveup;
+        animation-duration: 0.5s;
+        position: relative;
+      }
     </style>
 </head>
 <body>
@@ -100,16 +118,15 @@
   
 </div>
 <div id="intro">
-	intro
+	<img src="img1.jpg" width="100%" height="790">
 </div>
 <div id="img">
-  <img src="main.jpg" width="100%" height="800" style="position: absolute;">
-	<img src="img1.jpg" width="100%" height="790">
+	<img src="img1.jpg" width="100%" height="790" id="mo">
 </div>
 
 
 <script type="text/javascript">
-
+var deletes=false;
 	$("#img").hide();
   	$("#intro").hide();
     $("#rand").show();
@@ -125,17 +142,43 @@
     appId: "1:866846768783:web:6ef7269027340cfc"
   };
   firebase.initializeApp(firebaseConfig);
-var ref=firebase.database().ref("remote/remote");
+  var ref=firebase.database().ref("deletethk");
+  ref.once("value",function(snapshot){
+    if(snapshot.val()==true){
+      deletes=true;
+    }
+    console.log("setting delete :"+deletes);
+  },function(err){
 
+  });
+var ref=firebase.database().ref("remote/remote");
+var temp=0;
+var black=[];
 function myFunction(data){
 
   $("#rand").show();
     $("#load").hide();
     $("#listname").prepend("<a>"+data+"</a><br>");
+    $("#rand").addClass("moveup");
     $.playSound('sound.mp3');
+}
+function checkblack(item){
+  if(black.length==0){
+    return true;
+  }
+  for(let m=0;m<black.length;m++){
+    if(black[m]==item){
+      return false;
+    }
+    return true;
+  }
+}
+function setscreen(){
+
 }
 function random(types){
   $("#rand").hide();
+  $("#rand").removeClass("moveup");
     $("#load").show();
 	if(types=="ทั้งหมด"){
 let a1=Math.floor(Math.random()*6);
@@ -148,8 +191,47 @@ let a1=Math.floor(Math.random()*6);
       random(types);
       console.log("ซ้ำ");
 		}else{
-			document.getElementById("rand").innerHTML=snapshot.val();
-      setTimeout(myFunction(snapshot.val()), 200);
+			if(temp==5){
+        temp=0;
+        ref=firebase.database().ref("randthk");
+        ref.once("value",function(snapshot){
+          if(snapshot.val()!=null){
+            y=Object.values(snapshot.val());
+          k=Object.keys(snapshot.val());
+          console.log(k);
+          ran=Math.floor(Math.random()*y.length);
+          console.log(y[ran]);
+          o=y[ran];
+          o=o.split(",");
+          document.getElementById("rand").innerHTML="ม."+o[0];
+          setTimeout(myFunction(o[1]), 200);
+          if(deletes){
+            ref=firebase.database().ref("randthk/"+k[ran]);
+            ref.remove();
+          }
+        }else{
+          random(types);
+      console.log("ซ้ำ");
+        }
+        },function(err){
+
+        });
+      }else{
+        temp+=1;
+        if(checkblack(snapshot.val())){
+          console.log(deletes);
+          if(deletes){
+            ref=firebase.database().ref("thkrand/"+a1+"/"+a2+"/"+a3);
+            ref.remove();
+            console.log("DELETE");
+          }
+          document.getElementById("rand").innerHTML="ม."+a1+"/"+a2+" เลขที่ "+a3+"<br>"+snapshot.val();
+          setTimeout(myFunction(snapshot.val()), 200);
+        }else{
+
+        }
+        
+      }
 		}
 	},function(err){
 		console.log("error");
@@ -166,6 +248,11 @@ let a1=Math.floor(Math.random()*6);
 			random(types);
       console.log("ซ้ำ");
 		}else{
+      if(deletes){
+            ref=firebase.database().ref("thkrand/"+a1+"/"+a2+"/"+a3);
+            ref.remove();
+            console.log("DELETE");
+          }
 			document.getElementById("rand").innerHTML="ม."+a1+"/"+a2+" เลขที่ "+a3+"<br>"+snapshot.val();
       setTimeout(myFunction(snapshot.val()), 200);
        $("#rand").show();
@@ -177,7 +264,6 @@ let a1=Math.floor(Math.random()*6);
 	});
 	}
 }
-
 
 
   ref=firebase.database().ref("remote/remote");
@@ -197,6 +283,14 @@ let a1=Math.floor(Math.random()*6);
   			$("#img").show();
   			$("#intro").hide();
   			$("#main").hide();
+        $("#mo").addClass("moveon");
+        setTimeout(function(){
+          $("#main").show();
+  $("#intro").hide();
+  $("#img").hide();
+  console.log("dsa");
+$("#mo").removeClass("moveon");
+        }, 1000);
         ref=firebase.database().ref("remote/remote");
   			ref.remove();
   		}else{
