@@ -7,6 +7,7 @@
 	<meta charset="utf-8">
 	<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+    <script src='https://cdn.rawgit.com/admsev/jquery-play-sound/master/jquery.playSound.js'></script>
     <style type="text/css">
     	@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
     	@keyframes popup{
@@ -66,10 +67,7 @@
     </style>
 </head>
 <body>
-  <audio id="myAudio">
-    <source src="sound.ogg" type="audio/ogg">
-  <source src="sound.mp3" type="audio/mpeg">
-</audio>
+
 
 <div id="main">
 	
@@ -82,7 +80,6 @@
   <h1 id="rand">ชื่อ นามสกุล</h1>
   <img src="load.gif" width="90px" id="load">
   
-  
 </div>
 <div id="intro">
 	intro
@@ -90,8 +87,10 @@
 <div id="img">
 	<img src="img1.jpg" width="100%">
 </div>
+
+
 <script type="text/javascript">
-  
+
 	$("#img").hide();
   	$("#intro").hide();
     $("#rand").show();
@@ -110,11 +109,11 @@
 var ref=firebase.database().ref("remote/remote");
 
 function myFunction(data){
-  let x = document.getElementById("myAudio"); 
+
   $("#rand").show();
     $("#load").hide();
     $("#listname").prepend("<a>"+data+"</a><br>");
-    x.play(); 
+    $.playSound('sound.mp3');
 }
 function random(types){
   $("#rand").hide();
